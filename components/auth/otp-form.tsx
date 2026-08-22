@@ -1,161 +1,172 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Loader2, ArrowLeft, MailCheck } from "lucide-react";
+import { useMemo, useState, type FormEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/auth-context";
 import { api, getApiErrorMessage } from "@/lib/api";
-import { saveTokens } from "@/lib/auth-storage";
+import { otpSchema } from "@/lib/validations/auth";
 import type { AuthTokenResponse } from "@/types/auth";
 
-const OTP_LENGTH = 6;
-const RESEND_COOLDOWN_SECONDS = 60;
+function formatOtpExpiry(value: string): string | null {
+  const expiresAt = new Date(value);
+  if (Number.isNaN(expiresAt.getTime())) return null;
+
+  return new Intl.DateTimeFormat("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Ho_Chi_Minh",
+  }).format(expiresAt);
+}
 
 export function OtpForm({
   userId,
   email,
+  otpExpiresAt,
   onBack,
   onSuccess,
 }: {
   userId: string;
   email: string;
+  otpExpiresAt: string;
   onBack: () => void;
   onSuccess: () => void;
 }) {
-  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
+  const [otpCode, setOtpCode] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { login } = useAuth();
+  const shouldReduceMotion = useReducedMotion();
+  const expiryLabel = useMemo(
+    () => formatOtpExpiry(otpExpiresAt),
+    [otpExpiresAt]
+  );
 
-  useEffect(() => {
-    if (cooldown <= 0) return;
-    const timer = setInterval(() => setCooldown((c) => c - 1), 1000);
-    return () => clearInterval(timer);
-  }, [cooldown]);
-
-  useEffect(() => {
-    inputRefs.current[0]?.focus();
-  }, []);
-
-  const handleChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return; // chỉ cho phép số
-    const next = [...digits];
-    next[index] = value.slice(-1);
-    setDigits(next);
-
-    if (value && index < OTP_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-
-    if (next.every((d) => d !== "") && next.join("").length === OTP_LENGTH) {
-      handleVerify(next.join(""));
-    }
+  const handleChange = (value: string) => {
+    setOtpCode(value.replace(/\D/g, "").slice(0, 6));
+    if (validationError) setValidationError(null);
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !digits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
+  const handleVerify = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (loading) return;
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, OTP_LENGTH);
-    if (pasted.length === OTP_LENGTH) {
-      setDigits(pasted.split(""));
-      handleVerify(pasted);
+    const result = otpSchema.safeParse({ otpCode });
+    if (!result.success) {
+      setValidationError(
+        result.error.issues[0]?.message ?? "Mã xác thực không hợp lệ"
+      );
+      return;
     }
-  };
 
-  const handleVerify = async (otpCode: string) => {
     setLoading(true);
+    setValidationError(null);
     try {
-      const res = await api.post<AuthTokenResponse>("/v1/auth/verify-otp", {
+      const response = await api.post<AuthTokenResponse>("/v1/auth/verify-otp", {
         userId,
-        otpCode,
+        otpCode: result.data.otpCode,
       });
-      saveTokens(res.data);
-      toast.success("Xác thực thành công! Chào mừng bạn đến với JourneyAI.");
+      login(response.data);
+      toast.success("Xác thực thành công. Chào mừng bạn đến với Việt Khám Phá!");
       onSuccess();
-    } catch (err) {
-      toast.error(getApiErrorMessage(err));
-      setDigits(Array(OTP_LENGTH).fill(""));
-      inputRefs.current[0]?.focus();
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      setValidationError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleResend = async () => {
-    // Backend hiện chưa có endpoint resend riêng — để sẵn UI, nối logic khi có API
-    toast.info("Chức năng gửi lại mã sẽ sớm được hỗ trợ.");
-    setCooldown(RESEND_COOLDOWN_SECONDS);
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
       className="space-y-6"
     >
       <button
+        type="button"
         onClick={onBack}
-        className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
+        disabled={loading}
+        className="flex items-center gap-1 rounded-sm text-sm text-[#786b61] hover:text-[#2b241e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1f6f6b] disabled:opacity-50"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Quay lại
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Dùng email khác
       </button>
 
       <div className="space-y-2 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-          <MailCheck className="h-6 w-6 text-slate-700" />
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#1f6f6b]/10">
+          <MailCheck className="h-6 w-6 text-[#1f6f6b]" aria-hidden="true" />
         </div>
-        <h3 className="text-lg font-semibold">Xác thực email</h3>
-        <p className="text-sm text-slate-500">
-          Mã gồm 6 chữ số đã được gửi tới <br />
-          <span className="font-medium text-slate-800">{email}</span>
+        <h1 className="text-2xl font-semibold text-[#2b241e]">Xác thực email</h1>
+        <p className="text-sm leading-6 text-[#786b61]">
+          Nhập mã 6 chữ số đã gửi tới
+          <br />
+          <strong className="font-medium text-[#2b241e]">{email}</strong>
         </p>
       </div>
 
-      <div className="flex justify-center gap-2">
-        {digits.map((digit, i) => (
-          <input
-            key={i}
-            ref={(el) => {
-              inputRefs.current[i] = el;
-            }}
+      <form onSubmit={handleVerify} className="space-y-5" noValidate>
+        <div className="space-y-2">
+          <Label htmlFor="otp-code">Mã xác thực</Label>
+          <Input
+            id="otp-code"
+            name="otpCode"
             type="text"
             inputMode="numeric"
-            maxLength={1}
-            value={digit}
+            autoComplete="one-time-code"
+            pattern="[0-9]*"
+            maxLength={6}
+            value={otpCode}
             disabled={loading}
-            onChange={(e) => handleChange(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            onPaste={handlePaste}
-            className="h-14 w-12 rounded-lg border border-slate-300 text-center text-xl font-semibold outline-none transition focus:border-slate-800 focus:ring-2 focus:ring-slate-800/10 disabled:opacity-50"
+            onChange={(event) => handleChange(event.target.value)}
+            autoFocus
+            aria-invalid={Boolean(validationError)}
+            aria-describedby={
+              validationError ? "otp-code-error otp-code-help" : "otp-code-help"
+            }
+            className="h-14 text-center text-xl font-semibold tracking-[0.55em] tabular-nums"
           />
-        ))}
-      </div>
-
-      {loading && (
-        <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Đang xác thực...
+          <p id="otp-code-help" className="text-xs leading-5 text-[#786b61]">
+            {expiryLabel
+              ? `Mã có hiệu lực đến ${expiryLabel} (giờ Việt Nam).`
+              : "Mã có hiệu lực trong 5 phút kể từ khi đăng ký."}
+            {" "}
+            Hãy kiểm tra cả thư mục Spam nếu chưa thấy email.
+          </p>
+          {validationError && (
+            <p id="otp-code-error" className="text-sm text-red-600" role="alert">
+              {validationError}
+            </p>
+          )}
         </div>
-      )}
 
-      <div className="text-center text-sm text-slate-500">
-        Không nhận được mã?{" "}
-        {cooldown > 0 ? (
-          <span className="text-slate-400">Gửi lại sau {cooldown}s</span>
-        ) : (
-          <button onClick={handleResend} className="font-medium text-slate-800 underline underline-offset-2">
-            Gửi lại mã
-          </button>
-        )}
-      </div>
+        <Button
+          type="submit"
+          className="h-11 w-full rounded-xl bg-[#b5442e] font-semibold text-white shadow-[0_10px_24px_rgba(181,68,46,0.2)] hover:bg-[#9f3827] focus-visible:ring-[#b5442e]/35"
+          size="lg"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:animate-none" />
+              Đang xác thực...
+            </>
+          ) : (
+            "Xác thực và tiếp tục"
+          )}
+        </Button>
+      </form>
+
+      <p className="text-center text-xs leading-5 text-[#786b61]">
+        Mỗi mã chỉ sử dụng được một lần để bảo vệ tài khoản của bạn.
+      </p>
     </motion.div>
   );
 }

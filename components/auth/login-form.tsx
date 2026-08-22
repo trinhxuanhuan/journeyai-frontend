@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
@@ -11,13 +11,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api, getApiErrorMessage } from "@/lib/api";
-import { saveTokens } from "@/lib/auth-storage";
+import { useAuth } from "@/context/auth-context";
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
 import type { AuthTokenResponse } from "@/types/auth";
 
 export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const shouldReduceMotion = useReducedMotion();
 
   const {
     register,
@@ -31,7 +33,7 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true);
     try {
       const res = await api.post<AuthTokenResponse>("/v1/auth/login", values);
-      saveTokens(res.data);
+      login(res.data);
       toast.success("Đăng nhập thành công!");
       onSuccess();
     } catch (err) {
@@ -44,10 +46,11 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   return (
     <motion.form
       onSubmit={handleSubmit(onSubmit)}
-      initial={{ opacity: 0, x: -8 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
       className="space-y-6"
+      noValidate
     >
       <div className="space-y-2">
         <Label htmlFor="login-email">Email</Label>
@@ -56,49 +59,63 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
           type="email"
           placeholder="ban@email.com"
           autoComplete="email"
+          disabled={loading}
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? "login-email-error" : undefined}
           {...register("email")}
         />
         {errors.email && (
-          <p className="text-sm text-red-500">{errors.email.message}</p>
+          <p id="login-email-error" className="text-sm text-red-600" role="alert">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="login-password">Mật khẩu</Label>
-          <button
-            type="button"
-            className="text-xs text-slate-500 hover:text-slate-800 hover:underline"
-          >
-            Quên mật khẩu?
-          </button>
-        </div>
+        <Label htmlFor="login-password">Mật khẩu</Label>
         <div className="relative">
           <Input
             id="login-password"
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
             autoComplete="current-password"
+            disabled={loading}
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "login-password-error" : undefined}
+            className="pr-11"
             {...register("password")}
           />
           <button
             type="button"
             onClick={() => setShowPassword((p) => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
-            tabIndex={-1}
+            disabled={loading}
+            aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+            aria-pressed={showPassword}
+            className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f6f6b] disabled:opacity-50"
           >
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Eye className="h-4 w-4" aria-hidden="true" />
+            )}
           </button>
         </div>
         {errors.password && (
-          <p className="text-sm text-red-500">{errors.password.message}</p>
+          <p id="login-password-error" className="text-sm text-red-600" role="alert">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" size="lg" disabled={loading}>
+      <Button
+        type="submit"
+        className="h-11 w-full rounded-xl bg-[#b5442e] font-semibold text-white shadow-[0_10px_24px_rgba(181,68,46,0.2)] hover:bg-[#9f3827] focus-visible:ring-[#b5442e]/35"
+        size="lg"
+        disabled={loading}
+      >
         {loading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:animate-none" />
             Đang đăng nhập...
           </>
         ) : (
