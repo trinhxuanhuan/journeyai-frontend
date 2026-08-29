@@ -5,6 +5,8 @@ import {
   buildTourSearchParams,
   formatDepartureDate,
   formatTourDuration,
+  getActivityMapUrl,
+  getItineraryPeriod,
   getPriceUnitLabel,
   getSafeTourImageUrl,
   getTourTypeLabel,
@@ -23,6 +25,7 @@ const validSearchItem = {
   avgRating: 4.8,
   tourType: "GROUP",
   departureLocation: "Hà Nội",
+  destinationName: "Hà Giang",
   nearestDepartureDate: "2026-09-02T00:00:00Z",
   hasAvailableSlot: true,
 };
@@ -32,6 +35,7 @@ const validTourDetail = {
   name: "Hà Giang mùa đá nở hoa",
   description: "Một hành trình qua cao nguyên đá.",
   destination: {
+    name: "Hà Giang",
     province: "Hà Giang",
     geo: { lat: 22.8233, lng: 104.9836 },
   },
@@ -289,5 +293,27 @@ describe("tour presentation helpers", () => {
     expect(getTourTypeLabel("PRIVATE")).toBe("Tour riêng");
     expect(formatTourDuration(3, 2)).toBe("3 ngày 2 đêm");
     expect(getPriceUnitLabel("PER_GROUP")).toBe("/ nhóm");
+  });
+
+  it("labels itinerary periods and creates a coordinate-only map URL", () => {
+    expect(getItineraryPeriod("06:30")).toBe("Buổi sáng");
+    expect(getItineraryPeriod("12:00")).toBe("Buổi trưa");
+    expect(getItineraryPeriod("15:30")).toBe("Buổi chiều");
+    expect(getItineraryPeriod("19:00")).toBe("Buổi tối");
+    expect(getActivityMapUrl({ lat: 16.4637, lng: 107.5909 })).toBe(
+      "https://www.google.com/maps/search/?api=1&query=16.4637%2C107.5909"
+    );
+  });
+
+  it("falls back to the administrative area for legacy detail responses", () => {
+    const legacyDetail = parseTourDetail({
+      ...validTourDetail,
+      destination: {
+        province: "Quảng Nam",
+        geo: validTourDetail.destination.geo,
+      },
+    });
+
+    expect(legacyDetail.destination.name).toBe("Quảng Nam");
   });
 });

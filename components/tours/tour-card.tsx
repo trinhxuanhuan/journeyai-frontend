@@ -82,7 +82,11 @@ export function TourCard({ tour }: { tour: TourSearchItem }) {
                 className="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
                 aria-hidden="true"
               />
-              <span>Khởi hành từ {tour.departureLocation}</span>
+              <span>
+                {tour.destinationName
+                  ? `${tour.departureLocation} → ${tour.destinationName}`
+                  : `Khởi hành từ ${tour.departureLocation}`}
+              </span>
             </div>
             <div className="flex items-start gap-2 text-sm text-slate-500">
               <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />

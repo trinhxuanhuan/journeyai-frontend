@@ -19,7 +19,7 @@ const destinations = [
   },
   {
     name: "Huế",
-    queryValue: "Thừa Thiên Huế",
+    queryValue: "Huế",
     eyebrow: "Nhịp chậm cố đô",
     story: "Di sản, ẩm thực và những lớp ký ức bên dòng Hương.",
     icon: Landmark,
@@ -30,7 +30,7 @@ const destinations = [
   },
   {
     name: "Hội An",
-    queryValue: "Quảng Nam",
+    queryValue: "Hội An",
     eyebrow: "Phố kể chuyện",
     story: "Nếp nhà xưa, bến sông và một miền văn hóa luôn rộng mở.",
     icon: Soup,
@@ -41,7 +41,7 @@ const destinations = [
   },
   {
     name: "Phú Quốc",
-    queryValue: "Kiên Giang",
+    queryValue: "Phú Quốc",
     eyebrow: "Chạm miền biển xanh",
     story: "Ngày nắng trong, rừng xanh và nhịp sống của đảo ngọc.",
     icon: Waves,

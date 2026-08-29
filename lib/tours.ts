@@ -100,6 +100,7 @@ const tourSearchItemSchema = z.object({
   avgRating: nonNegativeMoneySchema.nullable().transform((value) => value ?? 0),
   tourType: tourTypeSchema,
   departureLocation: localizedTextSchema,
+  destinationName: localizedTextSchema.nullable().optional().transform((value) => value ?? null),
   nearestDepartureDate: instantSchema.nullable(),
   hasAvailableSlot: z.boolean(),
 });
@@ -164,10 +165,16 @@ const tourDetailSchema = z
     id: z.string().trim().min(1),
     name: localizedTextSchema,
     description: localizedTextSchema,
-    destination: z.object({
-      province: localizedTextSchema,
-      geo: geoSchema,
-    }),
+    destination: z
+      .object({
+        name: localizedTextSchema.nullable().optional(),
+        province: localizedTextSchema,
+        geo: geoSchema,
+      })
+      .transform((destination) => ({
+        ...destination,
+        name: destination.name ?? destination.province,
+      })),
     coverImageUrl: nullableTextSchema,
     images: imageListSchema,
     basePrice: positiveMoneySchema,
@@ -459,6 +466,8 @@ const DESTINATION_LABELS: Readonly<Record<string, string>> = {
   "Thừa Thiên Huế": "Huế",
   "Quảng Nam": "Hội An - Quảng Nam",
   "Kiên Giang": "Phú Quốc - Kiên Giang",
+  "Thành phố Huế": "Huế",
+  "Thành phố Đà Nẵng": "Đà Nẵng",
 };
 
 export function getDestinationDisplayName(value: string): string {
@@ -467,4 +476,18 @@ export function getDestinationDisplayName(value: string): string {
 
 export function getPriceUnitLabel(priceModel: "PER_PERSON" | "PER_GROUP"): string {
   return priceModel === "PER_PERSON" ? "/ khách" : "/ nhóm";
+}
+
+export function getItineraryPeriod(time: string): string {
+  const hour = Number(time.slice(0, 2));
+  if (!Number.isInteger(hour)) return "Trong ngày";
+  if (hour < 11) return "Buổi sáng";
+  if (hour < 14) return "Buổi trưa";
+  if (hour < 18) return "Buổi chiều";
+  return "Buổi tối";
+}
+
+export function getActivityMapUrl(location: { lat: number; lng: number }): string {
+  const query = encodeURIComponent(`${location.lat},${location.lng}`);
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
