@@ -1,10 +1,12 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Compass, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthHero } from "@/components/auth/auth-hero";
@@ -27,7 +29,7 @@ type AuthStep =
 function AuthPageFallback() {
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-[#faf6f0] text-[#6f6258]"
+      className="flex min-h-screen items-center justify-center bg-background text-muted-foreground"
       role="status"
       aria-live="polite"
     >
@@ -58,33 +60,39 @@ function AuthPageContent() {
 
   return (
     <GuestGuard returnTo={returnTo}>
-      <div className="grid min-h-screen font-sans lg:grid-cols-[minmax(0,1.15fr)_minmax(27rem,0.85fr)]">
+      <div className="grid min-h-screen font-sans lg:grid-cols-[minmax(0,1.08fr)_minmax(29rem,0.92fr)]">
         <AuthHero />
 
-        <div className="relative flex items-center justify-center overflow-hidden bg-[#f7f2eb] px-5 py-8 sm:px-8 lg:px-12 xl:px-16">
-          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full border border-[#2b241e]/5" />
-          <div className="absolute -bottom-52 -left-52 h-[30rem] w-[30rem] rounded-full bg-[#1f6f6b]/5 blur-3xl" />
+        <div className="relative flex items-center justify-center overflow-hidden bg-[#f5fafe] px-5 py-8 sm:px-8 lg:px-12 xl:px-16">
+          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full border border-sky-100" />
+          <div className="absolute -bottom-52 -left-52 h-[30rem] w-[30rem] rounded-full bg-sky-300/15 blur-3xl" />
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
-            className="relative z-10 w-full max-w-[27rem]"
+            className="relative z-10 w-full max-w-[28rem]"
           >
             <div className="mb-8 flex items-center justify-center gap-3 lg:hidden">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2b241e] text-[#fffaf3]">
-                <Compass className="h-5 w-5" strokeWidth={1.6} aria-hidden="true" />
-              </div>
+              <BrandMark className="h-10 w-10 rounded-xl" />
               <div>
-                <p className="font-semibold tracking-[-0.02em] text-[#2b241e]">
+                <p className="font-semibold tracking-[-0.02em] text-zinc-900">
                   Việt Khám Phá
                 </p>
-                <p className="text-[0.62rem] tracking-[0.2em] text-[#786b61] uppercase">
+                <p className="text-[0.62rem] tracking-[0.2em] text-zinc-500 uppercase">
                   Đi để hiểu hơn
                 </p>
               </div>
             </div>
 
-            <Card className="rounded-[1.75rem] border-[#2b241e]/8 bg-white/95 p-7 shadow-[0_28px_80px_rgba(55,42,31,0.11)] backdrop-blur-sm sm:p-9">
+            <Link
+              href="/"
+              className="mb-4 inline-flex items-center gap-2 rounded-md text-sm font-semibold text-slate-500 transition hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Về trang khám phá
+            </Link>
+
+            <Card className="rounded-[1.75rem] border-sky-100 bg-white/94 p-7 shadow-[0_24px_70px_rgba(14,76,118,0.13)] backdrop-blur-xl transition-shadow duration-500 hover:shadow-[0_30px_82px_rgba(14,76,118,0.18)] sm:p-9">
               <AnimatePresence mode="wait" initial={!shouldReduceMotion}>
                 {step.mode === "otp" ? (
                   <motion.div
@@ -109,15 +117,15 @@ function AuthPageContent() {
                     exit={shouldReduceMotion ? undefined : { opacity: 0 }}
                   >
                     <div className="mb-7 text-center">
-                      <p className="mb-2 text-[0.68rem] font-semibold tracking-[0.18em] text-[#b5442e] uppercase">
+                      <p className="mb-2 text-[0.68rem] font-bold tracking-[0.18em] text-primary uppercase">
                         Tài khoản hành trình
                       </p>
-                      <h1 className="text-[1.85rem] leading-tight font-semibold tracking-[-0.035em] text-[#2b241e]">
+                      <h1 className="text-[1.95rem] leading-tight font-bold tracking-[-0.04em] text-slate-950">
                         {step.mode === "login"
                           ? "Chào mừng trở lại"
                           : "Tạo tài khoản mới"}
                       </h1>
-                      <p className="mt-2 text-[0.95rem] leading-6 text-[#786b61]">
+                      <p className="mt-2 text-[0.95rem] leading-6 text-slate-500">
                         {step.mode === "login"
                           ? "Đăng nhập để tiếp tục hành trình của bạn"
                           : "Bắt đầu khám phá cùng Việt Khám Phá"}
@@ -131,16 +139,16 @@ function AuthPageContent() {
                       }
                       className="mb-6"
                     >
-                      <TabsList className="grid h-11 w-full grid-cols-2 rounded-xl bg-[#f0e9e1] p-1">
+                      <TabsList className="grid h-12 w-full grid-cols-2 rounded-xl bg-sky-50 p-1">
                         <TabsTrigger
                           value="login"
-                          className="rounded-lg text-[#75675d] data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-[#2b241e] data-[state=active]:shadow-sm"
+                          className="rounded-lg text-slate-500 data-[state=active]:bg-white data-[state=active]:font-bold data-[state=active]:text-primary data-[state=active]:shadow-sm"
                         >
                           Đăng nhập
                         </TabsTrigger>
                         <TabsTrigger
                           value="register"
-                          className="rounded-lg text-[#75675d] data-[state=active]:bg-white data-[state=active]:font-semibold data-[state=active]:text-[#2b241e] data-[state=active]:shadow-sm"
+                          className="rounded-lg text-slate-500 data-[state=active]:bg-white data-[state=active]:font-bold data-[state=active]:text-primary data-[state=active]:shadow-sm"
                         >
                           Đăng ký
                         </TabsTrigger>
@@ -165,14 +173,14 @@ function AuthPageContent() {
                       )}
                     </AnimatePresence>
 
-                    <p className="mt-5 w-full text-center text-sm text-[#786b61]">
+                    <p className="mt-5 w-full text-center text-sm text-zinc-500">
                       {step.mode === "login" ? (
                         <>
                           Chưa có tài khoản?{" "}
                           <button
                             type="button"
                             onClick={() => setStep({ mode: "register" })}
-                            className="font-medium text-[#2b241e] underline underline-offset-4 hover:text-[#b5442e]"
+                            className="font-medium text-primary underline underline-offset-4 hover:text-primary/90"
                           >
                             Đăng ký ngay
                           </button>
@@ -183,7 +191,7 @@ function AuthPageContent() {
                           <button
                             type="button"
                             onClick={() => setStep({ mode: "login" })}
-                            className="font-medium text-[#2b241e] underline underline-offset-4 hover:text-[#b5442e]"
+                            className="font-medium text-primary underline underline-offset-4 hover:text-primary/90"
                           >
                             Đăng nhập
                           </button>

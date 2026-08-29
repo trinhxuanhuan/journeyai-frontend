@@ -25,7 +25,7 @@ export function GuestGuard({
   if (status === "loading" || status === "authenticated") {
     return (
       <div
-        className="flex min-h-screen items-center justify-center bg-[#faf6f0] text-[#786b61]"
+        className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500"
         role="status"
         aria-live="polite"
       >

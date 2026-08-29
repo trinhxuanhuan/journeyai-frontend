@@ -1,14 +1,26 @@
+import { Suspense } from "react";
+
 import { SiteHeader } from "@/components/layout/site-header";
+import { WhyChooseUs } from "@/components/home/why-choose-us";
+import { EditorialFooter } from "@/components/home/editorial-footer";
+import {
+  TourDiscovery,
+  TourDiscoveryFallback,
+} from "@/components/tours/tour-discovery";
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative min-h-screen bg-white">
       <SiteHeader />
-      <main className="flex flex-1 items-center justify-center">
-        <h1 className="text-2xl font-semibold">
-          Trang chủ Việt Khám Phá — đang xây dựng
-        </h1>
+
+      <main>
+        <Suspense fallback={<TourDiscoveryFallback />}>
+          <TourDiscovery />
+        </Suspense>
+        <WhyChooseUs />
       </main>
+
+      <EditorialFooter />
     </div>
   );
 }

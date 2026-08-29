@@ -62,7 +62,7 @@ function isRejectedSession(error: unknown): boolean {
 const runRefresh = createSingleFlight(async (): Promise<AuthTokenResponse> => {
   const refreshToken = getRefreshToken();
   if (!refreshToken) {
-    throw new InvalidAuthSessionError("Khong co refresh token");
+    throw new InvalidAuthSessionError("Không có mã làm mới phiên đăng nhập");
   }
 
   const response = await refreshClient.post<AuthTokenResponse>(
