@@ -22,7 +22,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   if (status !== "authenticated") {
     return (
       <div
-        className="flex min-h-screen items-center justify-center text-[#786b61]"
+        className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500"
         role="status"
         aria-live="polite"
       >

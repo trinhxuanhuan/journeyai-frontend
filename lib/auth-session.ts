@@ -7,7 +7,7 @@ export interface AuthUser {
 }
 
 export class InvalidAuthSessionError extends Error {
-  constructor(message = "Phien dang nhap khong hop le") {
+  constructor(message = "Phiên đăng nhập không hợp lệ") {
     super(message);
     this.name = "InvalidAuthSessionError";
   }

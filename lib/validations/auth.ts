@@ -4,8 +4,8 @@ export const loginSchema = z.object({
   email: z
     .string()
     .trim()
-    .min(1, "Email không được để trống")
-    .email("Email không đúng định dạng"),
+    .min(1, "Thư điện tử không được để trống")
+    .email("Địa chỉ thư điện tử không đúng định dạng"),
   password: z.string().min(1, "Mật khẩu không được để trống"),
 });
 
@@ -14,8 +14,8 @@ export const registerSchema = z.object({
   email: z
     .string()
     .trim()
-    .min(1, "Email không được để trống")
-    .email("Email không đúng định dạng"),
+    .min(1, "Thư điện tử không được để trống")
+    .email("Địa chỉ thư điện tử không đúng định dạng"),
   password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
 });
 

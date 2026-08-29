@@ -94,27 +94,27 @@ export function OtpForm({
         type="button"
         onClick={onBack}
         disabled={loading}
-        className="flex items-center gap-1 rounded-sm text-sm text-[#786b61] hover:text-[#2b241e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1f6f6b] disabled:opacity-50"
+        className="flex items-center gap-1 rounded-sm text-sm font-semibold text-slate-500 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-50"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Dùng email khác
+        Dùng thư điện tử khác
       </button>
 
       <div className="space-y-2 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#1f6f6b]/10">
-          <MailCheck className="h-6 w-6 text-[#1f6f6b]" aria-hidden="true" />
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+          <MailCheck className="h-6 w-6 text-primary" aria-hidden="true" />
         </div>
-        <h1 className="text-2xl font-semibold text-[#2b241e]">Xác thực email</h1>
-        <p className="text-sm leading-6 text-[#786b61]">
+        <h1 className="text-2xl font-semibold text-zinc-900">Xác thực thư điện tử</h1>
+        <p className="text-sm leading-6 text-zinc-500">
           Nhập mã 6 chữ số đã gửi tới
           <br />
-          <strong className="font-medium text-[#2b241e]">{email}</strong>
+          <strong className="font-medium text-zinc-900">{email}</strong>
         </p>
       </div>
 
       <form onSubmit={handleVerify} className="space-y-5" noValidate>
         <div className="space-y-2">
-          <Label htmlFor="otp-code">Mã xác thực</Label>
+          <Label htmlFor="otp-code" className="font-semibold text-slate-700">Mã xác thực</Label>
           <Input
             id="otp-code"
             name="otpCode"
@@ -131,14 +131,14 @@ export function OtpForm({
             aria-describedby={
               validationError ? "otp-code-error otp-code-help" : "otp-code-help"
             }
-            className="h-14 text-center text-xl font-semibold tracking-[0.55em] tabular-nums"
+            className="h-14 rounded-xl border-slate-200 bg-slate-50 text-center text-xl font-semibold tracking-[0.55em] tabular-nums focus-visible:bg-white"
           />
-          <p id="otp-code-help" className="text-xs leading-5 text-[#786b61]">
+          <p id="otp-code-help" className="text-xs leading-5 text-zinc-500">
             {expiryLabel
               ? `Mã có hiệu lực đến ${expiryLabel} (giờ Việt Nam).`
               : "Mã có hiệu lực trong 5 phút kể từ khi đăng ký."}
             {" "}
-            Hãy kiểm tra cả thư mục Spam nếu chưa thấy email.
+            Hãy kiểm tra cả thư mục thư rác nếu chưa thấy thư điện tử.
           </p>
           {validationError && (
             <p id="otp-code-error" className="text-sm text-red-600" role="alert">
@@ -149,7 +149,7 @@ export function OtpForm({
 
         <Button
           type="submit"
-          className="h-11 w-full rounded-xl bg-[#b5442e] font-semibold text-white shadow-[0_10px_24px_rgba(181,68,46,0.2)] hover:bg-[#9f3827] focus-visible:ring-[#b5442e]/35"
+          className="h-12 w-full rounded-xl bg-primary font-bold text-white shadow-lg shadow-primary/20 hover:bg-[#075fae]"
           size="lg"
           disabled={loading}
         >
@@ -164,7 +164,7 @@ export function OtpForm({
         </Button>
       </form>
 
-      <p className="text-center text-xs leading-5 text-[#786b61]">
+      <p className="text-center text-xs leading-5 text-zinc-500">
         Mỗi mã chỉ sử dụng được một lần để bảo vệ tài khoản của bạn.
       </p>
     </motion.div>

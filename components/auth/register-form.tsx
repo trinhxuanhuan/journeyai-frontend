@@ -54,7 +54,7 @@ export function RegisterForm({
       noValidate
     >
       <div className="space-y-2">
-        <Label htmlFor="register-fullname">Họ và tên</Label>
+        <Label htmlFor="register-fullname" className="font-semibold text-slate-700">Họ và tên</Label>
         <Input
           id="register-fullname"
           placeholder="Nguyễn Văn A"
@@ -62,6 +62,7 @@ export function RegisterForm({
           disabled={loading}
           aria-invalid={Boolean(errors.fullName)}
           aria-describedby={errors.fullName ? "register-fullname-error" : undefined}
+          className="h-12 rounded-xl border-slate-200 bg-slate-50 px-4 focus-visible:bg-white"
           {...register("fullName")}
         />
         {errors.fullName && (
@@ -72,15 +73,16 @@ export function RegisterForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="register-email">Email</Label>
+        <Label htmlFor="register-email" className="font-semibold text-slate-700">Thư điện tử</Label>
         <Input
           id="register-email"
           type="email"
-          placeholder="ban@email.com"
+          placeholder="Nhập địa chỉ thư điện tử"
           autoComplete="email"
           disabled={loading}
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? "register-email-error" : undefined}
+          className="h-12 rounded-xl border-slate-200 bg-slate-50 px-4 focus-visible:bg-white"
           {...register("email")}
         />
         {errors.email && (
@@ -91,7 +93,7 @@ export function RegisterForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="register-password">Mật khẩu</Label>
+        <Label htmlFor="register-password" className="font-semibold text-slate-700">Mật khẩu</Label>
         <div className="relative">
           <Input
             id="register-password"
@@ -101,7 +103,7 @@ export function RegisterForm({
             disabled={loading}
             aria-invalid={Boolean(errors.password)}
             aria-describedby={errors.password ? "register-password-error" : undefined}
-            className="pr-11"
+            className="h-12 rounded-xl border-slate-200 bg-slate-50 px-4 pr-11 focus-visible:bg-white"
             {...register("password")}
           />
           <button
@@ -110,7 +112,7 @@ export function RegisterForm({
             disabled={loading}
             aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
             aria-pressed={showPassword}
-            className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f6f6b] disabled:opacity-50"
+            className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
           >
             {showPassword ? (
               <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -128,7 +130,7 @@ export function RegisterForm({
 
       <Button
         type="submit"
-        className="h-11 w-full rounded-xl bg-[#b5442e] font-semibold text-white shadow-[0_10px_24px_rgba(181,68,46,0.2)] hover:bg-[#9f3827] focus-visible:ring-[#b5442e]/35"
+        className="h-12 w-full rounded-xl bg-primary font-bold text-white shadow-lg shadow-primary/20 hover:bg-[#075fae]"
         size="lg"
         disabled={loading}
       >
