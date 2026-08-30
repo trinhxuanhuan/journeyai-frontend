@@ -22,9 +22,9 @@ const destinations = [
   { value: "Hà Nội", label: "Hà Nội" },
   { value: "Hà Giang", label: "Hà Giang" },
   { value: "Đà Nẵng", label: "Đà Nẵng" },
-  { value: "Thừa Thiên Huế", label: "Huế" },
-  { value: "Quảng Nam", label: "Hội An - Quảng Nam" },
-  { value: "Kiên Giang", label: "Phú Quốc - Kiên Giang" },
+  { value: "Huế", label: "Huế" },
+  { value: "Hội An", label: "Hội An" },
+  { value: "Phú Quốc", label: "Phú Quốc" },
 ] as const;
 
 const tourTypes: ReadonlyArray<{ value: TourTypeFilter; label: string }> = [

@@ -13,6 +13,7 @@ import {
   CircleX,
   Clock3,
   Compass,
+  ExternalLink,
   Hotel,
   Info,
   MapPin,
@@ -34,6 +35,8 @@ import {
   formatMeetingTime,
   formatTourDuration,
   formatTourPrice,
+  getActivityMapUrl,
+  getItineraryPeriod,
   getPriceUnitLabel,
   getPublicDepartures,
   getTourDetail,
@@ -217,8 +220,18 @@ function TourDetailContent({
           Trở lại danh sách tour
         </Link>
 
-        <div className="mt-6 grid gap-3 overflow-hidden rounded-[1.75rem] lg:grid-cols-[1.65fr_1fr] lg:grid-rows-2">
-          <div className="group relative aspect-[16/10] overflow-hidden bg-slate-200 lg:row-span-2 lg:aspect-auto lg:min-h-[520px]">
+        <div
+          className={cn(
+            "mt-6 grid gap-3 overflow-hidden rounded-[1.75rem]",
+            gallery.length > 1 && "lg:grid-cols-[1.65fr_1fr] lg:grid-rows-2"
+          )}
+        >
+          <div
+            className={cn(
+              "group relative aspect-[16/10] overflow-hidden bg-slate-200 lg:aspect-auto lg:min-h-[520px]",
+              gallery.length > 1 && "lg:row-span-2"
+            )}
+          >
             <TourImage
               src={gallery[0] ?? null}
               alt={`Toàn cảnh ${tour.name}`}
@@ -226,20 +239,21 @@ function TourDetailContent({
               className="transition-transform duration-[1100ms] ease-out group-hover:scale-[1.045]"
             />
           </div>
-          <div className="group relative hidden min-h-[254px] overflow-hidden bg-slate-200 lg:block">
-            <TourImage
-              src={gallery[1] ?? null}
-              alt={`Điểm nhấn trong ${tour.name}`}
-              className="transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]"
-            />
-          </div>
-          <div className="group relative hidden min-h-[254px] overflow-hidden bg-slate-200 lg:block">
-            <TourImage
-              src={gallery[2] ?? null}
-              alt={`Trải nghiệm trong ${tour.name}`}
-              className="transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]"
-            />
-          </div>
+          {gallery.slice(1).map((image, index) => (
+            <div
+              key={image}
+              className={cn(
+                "group relative hidden min-h-[254px] overflow-hidden bg-slate-200 lg:block",
+                gallery.length === 2 && "lg:row-span-2"
+              )}
+            >
+              <TourImage
+                src={image}
+                alt={index === 0 ? `Điểm nhấn trong ${tour.name}` : `Trải nghiệm trong ${tour.name}`}
+                className="transition-transform duration-[1100ms] ease-out group-hover:scale-[1.06]"
+              />
+            </div>
+          ))}
         </div>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_390px]">
@@ -273,7 +287,7 @@ function TourDetailContent({
               <SummaryItem
                 icon={Route}
                 label="Tuyến hành trình"
-                value={`${tour.departureLocation} → ${tour.destination.province}`}
+                value={`${tour.departureLocation} → ${tour.destination.name}`}
               />
               <SummaryItem
                 icon={Clock3}
@@ -333,34 +347,70 @@ function TourDetailContent({
                 id="itinerary-heading"
               />
 
+              <div className="mt-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4 text-sm leading-6 text-slate-600">
+                <p className="flex items-start gap-2">
+                  <Info className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  Lịch trình thể hiện các điểm tham quan và khung giờ vận hành dự kiến. Thứ tự có thể điều chỉnh theo thời tiết, giao thông hoặc thông báo của điểm đến nhưng không tự ý cắt giảm quyền lợi đã công bố.
+                </p>
+              </div>
+
+              <nav aria-label="Đi nhanh đến ngày trong lịch trình" className="mt-5 flex gap-2 overflow-x-auto pb-2">
+                {tour.itinerary.map((day) => (
+                  <a
+                    key={day.dayNumber}
+                    href={`#ngay-${day.dayNumber}`}
+                    className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-600 transition hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Ngày {day.dayNumber}
+                  </a>
+                ))}
+              </nav>
+
               <ol className="mt-7 space-y-5">
                 {tour.itinerary.map((day) => (
                   <li
                     key={`${day.dayNumber}-${day.title}`}
-                    className="group relative rounded-[1.25rem] border border-slate-200 bg-white p-5 shadow-[0_8px_28px_rgba(15,23,42,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-[0_16px_38px_rgba(15,73,110,0.1)] sm:p-6"
+                    id={`ngay-${day.dayNumber}`}
+                    className="scroll-mt-28 rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_8px_28px_rgba(15,23,42,0.04)] sm:p-6"
                   >
                     <div className="flex items-start gap-4">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-bold text-white shadow-[0_8px_20px_rgba(11,116,209,0.2)]">
-                        {day.dayNumber}
+                      <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-primary text-white">
+                        <small className="text-[0.55rem] font-bold tracking-[0.08em] uppercase opacity-80">Ngày</small>
+                        <strong className="text-base leading-none">{day.dayNumber}</strong>
                       </span>
                       <div className="min-w-0 flex-1">
                         <h3 className="text-xl font-bold text-slate-900">
                           {day.title}
                         </h3>
-                        <ul className="mt-4 space-y-3">
+                        <ul className="relative mt-6 space-y-0 before:absolute before:top-2 before:bottom-3 before:left-[5px] before:w-px before:bg-slate-200">
                           {day.activities.map((activity, index) => (
                             <li
                               key={`${activity.time}-${activity.description}-${index}`}
-                              className="grid gap-1 text-sm leading-6 text-slate-600 sm:grid-cols-[72px_1fr]"
+                              className="relative grid gap-2 pb-6 pl-7 text-sm leading-6 text-slate-600 last:pb-0 sm:grid-cols-[118px_1fr]"
                             >
-                              <span className="inline-flex items-center gap-1.5 font-semibold text-primary">
-                                <Clock3
-                                  className="h-3.5 w-3.5"
-                                  aria-hidden="true"
-                                />
-                                {activity.time}
+                              <span className="absolute top-1.5 left-0 h-[11px] w-[11px] rounded-full border-[3px] border-sky-100 bg-primary" aria-hidden="true" />
+                              <span>
+                                <strong className="block font-bold text-primary">{activity.time}</strong>
+                                <small className="block text-[0.7rem] font-semibold tracking-[0.04em] text-slate-400 uppercase">
+                                  {getItineraryPeriod(activity.time)}
+                                </small>
                               </span>
-                              <span>{activity.description}</span>
+                              <span>
+                                <span className="block">{activity.description}</span>
+                                {activity.location && (
+                                  <a
+                                    href={getActivityMapUrl(activity.location)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="mt-2 inline-flex items-center gap-1.5 font-semibold text-primary transition hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                    aria-label={`Mở vị trí hoạt động lúc ${activity.time} trên Google Maps`}
+                                  >
+                                    <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Xem vị trí
+                                    <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                                  </a>
+                                )}
+                              </span>
                             </li>
                           ))}
                         </ul>
