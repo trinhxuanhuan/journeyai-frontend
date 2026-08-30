@@ -15,6 +15,16 @@ const ERROR_MESSAGE_MAP: Record<string, string> = {
     "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.",
   "Refresh token da het han, vui long dang nhap lai":
     "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+  "Rat tiec, khong du cho trong cho so luong yeu cau":
+    "Rất tiếc, lịch khởi hành không còn đủ chỗ cho nhóm của bạn.",
+  "So luong khach khong nam trong gioi han cua tour":
+    "Số lượng khách không nằm trong giới hạn của tour.",
+  "Ngay khoi hanh tour rieng khong hop le":
+    "Ngày khởi hành tour riêng không hợp lệ.",
+  "Thoi gian giu cho da het, khong the khoi tao thanh toan":
+    "Thời gian giữ chỗ đã hết. Vui lòng tạo booking mới.",
+  "Booking khong o trang thai cho thanh toan hoac da het han giu cho":
+    "Booking không còn ở trạng thái chờ thanh toán hoặc đã hết hạn giữ chỗ.",
 };
 
 export function translateErrorMessage(rawMessage: string): string {

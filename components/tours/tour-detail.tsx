@@ -30,6 +30,7 @@ import {
 
 import { TourImage } from "@/components/tours/tour-image";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { buildBookingHref } from "@/lib/bookings";
 import {
   formatDepartureDate,
   formatMeetingTime,
@@ -822,6 +823,17 @@ function GroupDeparturePanel({
                       />
                       Đã phân công hướng dẫn viên
                     </p>
+                    {departure.bookable && (
+                      <Link
+                        href={buildBookingHref(tour.id, departure.departureId)}
+                        className={cn(
+                          buttonVariants({ size: "lg" }),
+                          "mt-4 h-11 w-full rounded-xl bg-primary font-bold text-white shadow-[0_10px_24px_rgba(11,116,209,0.18)] hover:bg-[#075fae]"
+                        )}
+                      >
+                        Chọn lịch này
+                      </Link>
+                    )}
                   </li>
                 );
               })}
@@ -856,6 +868,16 @@ function PrivateTourPanel({ tour }: { tour: TourDetail }) {
           />
         )}
       </dl>
+
+      <Link
+        href={buildBookingHref(tour.id)}
+        className={cn(
+          buttonVariants({ size: "lg" }),
+          "mt-5 h-11 w-full rounded-xl bg-primary font-bold text-white shadow-[0_10px_24px_rgba(11,116,209,0.18)] hover:bg-[#075fae]"
+        )}
+      >
+        Đặt tour riêng
+      </Link>
     </div>
   );
 }
