@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { type FormEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
@@ -126,18 +127,17 @@ export function DiscoveryHero({
               <Route className="h-4 w-4" aria-hidden="true" />
               Tour trong nước
             </button>
-            <button
-              type="button"
-              disabled
-              title="Tính năng đang được hoàn thiện"
-              className="flex h-10 shrink-0 cursor-not-allowed items-center gap-2 rounded-xl px-3.5 text-sm font-semibold text-slate-400"
+            <Link
+              href="/lap-lich-trinh"
+              className="flex h-10 shrink-0 items-center gap-2 rounded-xl px-3.5 text-sm font-semibold text-slate-500 transition hover:bg-sky-50 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              aria-label="Mở công cụ lập lịch trình tự túc bằng AI"
             >
               <Sparkles className="h-4 w-4" aria-hidden="true" />
               Lịch trình AI
-              <span className="hidden rounded-full bg-slate-100 px-2 py-0.5 text-[0.62rem] font-bold uppercase min-[430px]:inline">
-                Sắp ra mắt
+              <span className="hidden rounded-full bg-emerald-50 px-2 py-0.5 text-[0.62rem] font-bold text-emerald-700 uppercase min-[430px]:inline">
+                Đã mở
               </span>
-            </button>
+            </Link>
           </div>
 
           <form
