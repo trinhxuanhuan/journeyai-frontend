@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ClipboardList, Loader2, LogOut, UserRound } from "lucide-react";
 
 import { BrandMark } from "@/components/brand/brand-mark";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
@@ -84,6 +85,7 @@ export function SiteHeader() {
 
           {status === "authenticated" && user && (
             <div className="flex items-center gap-2">
+              <NotificationBell />
               <Link
                 href="/bookings"
                 className="inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-slate-600 transition hover:bg-sky-50 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
