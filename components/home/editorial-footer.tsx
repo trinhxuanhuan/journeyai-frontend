@@ -43,7 +43,8 @@ export function EditorialFooter() {
             <ul className="mt-5 space-y-3 text-sm font-semibold text-slate-300">
               <li><Link href="/#tour-results" className="transition hover:text-white">Tour đang mở</Link></li>
               <li><Link href="/#destinations" className="transition hover:text-white">Điểm đến Việt Nam</Link></li>
-              <li><span className="inline-flex items-center gap-2 text-slate-500">Lịch trình AI <small className="rounded-full bg-white/8 px-2 py-0.5 text-[0.6rem] font-bold uppercase">Sắp ra mắt</small></span></li>
+              <li><Link href="/lap-lich-trinh" className="transition hover:text-white">Lập lịch trình bằng AI</Link></li>
+              <li><Link href="/hanh-trinh" className="transition hover:text-white">Hành trình đã lưu</Link></li>
             </ul>
           </div>
 
