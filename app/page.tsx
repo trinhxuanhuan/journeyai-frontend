@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { WhyChooseUs } from "@/components/home/why-choose-us";
 import { EditorialFooter } from "@/components/home/editorial-footer";
+import { AiPlannerPromo } from "@/components/home/ai-planner-promo";
 import {
   TourDiscovery,
   TourDiscoveryFallback,
@@ -17,6 +18,7 @@ export default function HomePage() {
         <Suspense fallback={<TourDiscoveryFallback />}>
           <TourDiscovery />
         </Suspense>
+        <AiPlannerPromo />
         <WhyChooseUs />
       </main>
 

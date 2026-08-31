@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Việt Khám Phá — Khám phá Việt Nam theo cách của bạn",
-  description: "Đặt tour du lịch trong nước dễ dàng, nhanh chóng cùng Việt Khám Phá.",
+  description: "Đặt tour Việt Nam hoặc tự xây lịch trình theo ngân sách và sở thích cùng Việt Khám Phá.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
