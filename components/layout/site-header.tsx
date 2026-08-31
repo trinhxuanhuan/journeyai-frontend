@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ClipboardList, Loader2, LogOut, UserRound } from "lucide-react";
+import { ClipboardList, Loader2, LogOut, Sparkles, UserRound } from "lucide-react";
 
 import { BrandMark } from "@/components/brand/brand-mark";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -64,6 +64,15 @@ export function SiteHeader() {
         </div>
 
         <div className="flex shrink-0 items-center gap-2.5">
+          <Link
+            href="/lap-lich-trinh"
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-sky-100 bg-sky-50 px-3 text-sm font-bold text-primary transition hover:border-sky-200 hover:bg-sky-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            aria-label="Lập lịch trình tự túc bằng AI"
+          >
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden xl:inline">Lập lịch AI</span>
+          </Link>
+
           {status === "loading" && (
             <span className="flex h-9 items-center gap-2 px-2 text-sm text-slate-500" role="status">
               <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" />
