@@ -17,6 +17,7 @@ import {
   Hotel,
   Info,
   MapPin,
+  Navigation,
   RefreshCw,
   Route,
   ShieldCheck,
@@ -321,6 +322,14 @@ function TourDetailContent({
                 id="package-heading"
               />
 
+              <div className="mt-6 flex items-start gap-3 rounded-2xl border border-sky-100 bg-sky-50/70 p-4 text-sm leading-6 text-slate-600">
+                <Navigation className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                <p>
+                  <strong className="text-slate-800">Giá tour áp dụng từ {tour.departureLocation}.</strong>{" "}
+                  Phương tiện ghi trong gói phục vụ từ điểm tập trung và trong suốt chương trình. Chặng từ nơi ở của bạn đến điểm khởi hành chỉ được tính khi xuất hiện rõ trong mục “Đã bao gồm”.
+                </p>
+              </div>
+
               <div className="mt-7 grid gap-4 md:grid-cols-2">
                 <PolicyList
                   title="Đã bao gồm"
@@ -537,7 +546,7 @@ function PolicyList({
 
 const packageSections = [
   { key: "accommodation", label: "Lưu trú", icon: Hotel },
-  { key: "transport", label: "Di chuyển", icon: BusFront },
+  { key: "transport", label: "Di chuyển trong chương trình", icon: BusFront },
   { key: "meals", label: "Bữa ăn", icon: Utensils },
   { key: "tickets", label: "Vé tham quan", icon: TicketCheck },
   { key: "insurance", label: "Bảo hiểm", icon: ShieldCheck },
@@ -652,7 +661,8 @@ function BookingSummary({
 
   return (
     <aside
-      className="lg:sticky lg:top-24 lg:self-start"
+      id={tour.tourType === "GROUP" ? "lich-khoi-hanh" : "dat-tour"}
+      className="scroll-mt-24 lg:sticky lg:top-24 lg:self-start"
       aria-labelledby="booking-summary-heading"
     >
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,73,110,0.1)]">
