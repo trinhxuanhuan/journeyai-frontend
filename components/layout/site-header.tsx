@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ClipboardList, Loader2, LogOut, Sparkles, UserRound } from "lucide-react";
+import { ClipboardList, Loader2, Sparkles } from "lucide-react";
 
+import { AccountMenu } from "@/components/account/account-menu";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { NotificationBell } from "@/components/notifications/notification-bell";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
 
@@ -17,18 +17,7 @@ const navigation = [
 ] as const;
 
 export function SiteHeader() {
-  const { status, user, logout } = useAuth();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const handleLogout = async () => {
-    if (isLoggingOut) return;
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
+  const { status, user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.03)] backdrop-blur-xl">
@@ -97,34 +86,13 @@ export function SiteHeader() {
               <NotificationBell />
               <Link
                 href="/bookings"
-                className="inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-slate-600 transition hover:bg-sky-50 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                aria-label="Xem booking của tôi"
+                className="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-slate-600 transition hover:bg-sky-50 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:inline-flex"
+                aria-label="Xem đơn đặt tour của tôi"
               >
                 <ClipboardList className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden md:inline">Đơn của tôi</span>
+                <span className="hidden xl:inline">Đơn của tôi</span>
               </Link>
-              <span className="hidden h-10 items-center gap-2 rounded-xl bg-sky-50 px-3 text-sm font-semibold text-slate-700 sm:flex">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white">
-                  <UserRound className="h-3.5 w-3.5" />
-                </span>
-                Tài khoản
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="h-10 rounded-xl border-slate-200 px-3 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-              >
-                {isLoggingOut ? (
-                  <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" />
-                ) : (
-                  <LogOut className="h-4 w-4" />
-                )}
-                <span className="hidden sm:inline">
-                  {isLoggingOut ? "Đang đăng xuất..." : "Đăng xuất"}
-                </span>
-              </Button>
+              <AccountMenu />
             </div>
           )}
         </div>
