@@ -35,6 +35,7 @@ const NO_REFRESH_PATHS = [
   "/v1/auth/login",
   "/v1/auth/register",
   "/v1/auth/verify-otp",
+  "/v1/auth/resend-otp",
   "/v1/auth/refresh",
   "/v1/auth/logout",
   "/v1/auth/logout-all",
