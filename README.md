@@ -2,7 +2,21 @@
 
 Giao diện khách hàng cho nền tảng đặt tour nội địa và lập lịch trình tự túc bằng AI. Sản phẩm tập trung vào trải nghiệm du lịch Việt Nam có chiều sâu, minh bạch về lịch khởi hành, giá, thành phần gói tour và dự toán hành trình.
 
+[![CI](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml)
+
 > Đây là frontend của hệ thống Việt Khám Phá. Backend được phát triển ở repository [`journeyai`](https://github.com/trinhxuanhuan/journeyai).
+
+## Hình ảnh sản phẩm
+
+Các ảnh dưới đây được chụp từ bản chạy thật với dữ liệu catalog và API local, không phải mockup tĩnh.
+
+| Khám phá tour | Chi tiết package tour |
+| --- | --- |
+| ![Trang chủ Việt Khám Phá](docs/assets/portfolio/trang-chu-desktop.png) | ![Chi tiết tour Huế](docs/assets/portfolio/chi-tiet-tour-hue.png) |
+
+| Hành trình AI đã lưu | Trải nghiệm mobile |
+| --- | --- |
+| ![Kết quả hành trình AI](docs/assets/portfolio/hanh-trinh-ai.png) | <img src="docs/assets/portfolio/trang-chu-mobile.png" alt="Trang chủ Việt Khám Phá trên mobile" width="320"> |
 
 ## Phạm vi MVP
 
@@ -96,6 +110,8 @@ docker run --rm -p 3000:3000 viet-kham-pha/frontend:rc
 ```
 
 Image chạy bằng user không đặc quyền, chỉ chứa output đã trace của Next.js và có healthcheck tại `/robots.txt`. Backend staging phải cấu hình `CORS_ALLOWED_ORIGIN` trùng chính xác `NEXT_PUBLIC_SITE_URL`.
+
+Hướng dẫn triển khai miễn phí, không cần mua domain: [docs/VERCEL_STAGING.md](docs/VERCEL_STAGING.md).
 
 Sau khi FE và BE đã triển khai, chạy public smoke không cần tài khoản hoặc secret:
 
