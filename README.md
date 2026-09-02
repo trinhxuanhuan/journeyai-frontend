@@ -82,6 +82,31 @@ Mở `http://localhost:3000`. Hai biến môi trường public:
 
 Không đưa secret, khóa VNPay hoặc thông tin hạ tầng riêng vào biến `NEXT_PUBLIC_*` vì chúng được đóng gói xuống trình duyệt.
 
+## Build và triển khai
+
+Frontend hỗ trợ cả nền tảng Next.js managed và image Docker standalone. Hai biến `NEXT_PUBLIC_*` phải được cấp tại **thời điểm build**; đổi biến runtime không thay được URL đã đóng gói trong JavaScript phía trình duyệt.
+
+```powershell
+docker build `
+  --build-arg NEXT_PUBLIC_API_URL=https://api-staging.vietkhampha.vn `
+  --build-arg NEXT_PUBLIC_SITE_URL=https://staging.vietkhampha.vn `
+  -t viet-kham-pha/frontend:rc .
+
+docker run --rm -p 3000:3000 viet-kham-pha/frontend:rc
+```
+
+Image chạy bằng user không đặc quyền, chỉ chứa output đã trace của Next.js và có healthcheck tại `/robots.txt`. Backend staging phải cấu hình `CORS_ALLOWED_ORIGIN` trùng chính xác `NEXT_PUBLIC_SITE_URL`.
+
+Sau khi FE và BE đã triển khai, chạy public smoke không cần tài khoản hoặc secret:
+
+```powershell
+./scripts/smoke-staging.ps1 `
+  -FrontendBaseUrl https://staging.vietkhampha.vn `
+  -ApiBaseUrl https://api-staging.vietkhampha.vn
+```
+
+Script kiểm tra branding/login/SEO, Gateway health, dữ liệu Tour thật, trang chi tiết, CORS và việc chặn API bảo vệ. Các luồng có tài khoản, Booking, VNPay, Notification và AI tiếp tục theo checklist E2E của backend vì cần hộp thư cùng tài khoản sandbox được quản lý.
+
 ## Quality gates
 
 ```powershell
