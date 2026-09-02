@@ -3,6 +3,12 @@ const ERROR_MESSAGE_MAP: Record<string, string> = {
   "Email hoac mat khau khong dung": "Thư điện tử hoặc mật khẩu không chính xác.",
   "Ma OTP khong dung": "Mã xác thực không đúng. Vui lòng kiểm tra lại thư điện tử.",
   "Ma OTP da het han": "Mã xác thực đã hết hạn.",
+  "Vui lòng chờ 60 giây trước khi yêu cầu mã mới":
+    "Vui lòng chờ đủ 60 giây trước khi yêu cầu mã xác thực mới.",
+  "Bạn đã yêu cầu quá nhiều mã xác thực, vui lòng thử lại sau":
+    "Bạn đã yêu cầu quá nhiều mã xác thực. Vui lòng thử lại sau một giờ.",
+  "Không thể gửi mã xác thực cho tài khoản này":
+    "Không thể gửi mã xác thực cho tài khoản này. Có thể tài khoản đã được xác thực.",
   "Da nhap sai OTP qua 5 lan, vui long thu lai sau 15 phut":
     "Bạn đã nhập sai mã quá nhiều lần. Vui lòng thử lại sau 15 phút.",
   "Tai khoan bi khoa tam 15 phut do dang nhap sai qua nhieu lan":

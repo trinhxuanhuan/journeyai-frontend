@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, useReducedMotion } from "framer-motion";
@@ -13,9 +14,23 @@ import { Label } from "@/components/ui/label";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
-import type { AuthTokenResponse } from "@/types/auth";
+import type {
+  AccountVerificationRequiredResponse,
+  AuthTokenResponse,
+} from "@/types/auth";
 
-export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+export function LoginForm({
+  onSuccess,
+  onVerificationRequired,
+}: {
+  onSuccess: () => void;
+  onVerificationRequired: (
+    userId: string,
+    email: string,
+    otpExpiresAt: string,
+    otpResendAvailableAt: string
+  ) => void;
+}) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -37,6 +52,25 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
       toast.success("Đăng nhập thành công!");
       onSuccess();
     } catch (err) {
+      if (axios.isAxiosError<AccountVerificationRequiredResponse>(err)) {
+        const data = err.response?.data;
+        if (
+          data?.error === "ACCOUNT_UNVERIFIED" &&
+          data.userId &&
+          data.email &&
+          data.otpExpiresAt &&
+          data.otpResendAvailableAt
+        ) {
+          toast.info("Tài khoản của bạn cần hoàn tất xác thực thư điện tử.");
+          onVerificationRequired(
+            data.userId,
+            data.email,
+            data.otpExpiresAt,
+            data.otpResendAvailableAt
+          );
+          return;
+        }
+      }
       toast.error(getApiErrorMessage(err));
     } finally {
       setLoading(false);

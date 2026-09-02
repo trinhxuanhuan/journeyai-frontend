@@ -24,6 +24,8 @@ type AuthStep =
       userId: string;
       email: string;
       otpExpiresAt: string;
+      otpResendAvailableAt: string;
+      backTo: "login" | "register";
     };
 
 function AuthPageFallback() {
@@ -105,7 +107,8 @@ function AuthPageContent() {
                       userId={step.userId}
                       email={step.email}
                       otpExpiresAt={step.otpExpiresAt}
-                      onBack={() => setStep({ mode: "register" })}
+                      otpResendAvailableAt={step.otpResendAvailableAt}
+                      onBack={() => setStep({ mode: step.backTo })}
                       onSuccess={handleSuccess}
                     />
                   </motion.div>
@@ -157,16 +160,41 @@ function AuthPageContent() {
 
                     <AnimatePresence mode="wait" initial={!shouldReduceMotion}>
                       {step.mode === "login" ? (
-                        <LoginForm key="login-form" onSuccess={handleSuccess} />
-                      ) : (
-                        <RegisterForm
-                          key="register-form"
-                          onRegistered={(userId, email, otpExpiresAt) =>
+                        <LoginForm
+                          key="login-form"
+                          onSuccess={handleSuccess}
+                          onVerificationRequired={(
+                            userId,
+                            email,
+                            otpExpiresAt,
+                            otpResendAvailableAt
+                          ) =>
                             setStep({
                               mode: "otp",
                               userId,
                               email,
                               otpExpiresAt,
+                              otpResendAvailableAt,
+                              backTo: "login",
+                            })
+                          }
+                        />
+                      ) : (
+                        <RegisterForm
+                          key="register-form"
+                          onRegistered={(
+                            userId,
+                            email,
+                            otpExpiresAt,
+                            otpResendAvailableAt
+                          ) =>
+                            setStep({
+                              mode: "otp",
+                              userId,
+                              email,
+                              otpExpiresAt,
+                              otpResendAvailableAt,
+                              backTo: "register",
                             })
                           }
                         />

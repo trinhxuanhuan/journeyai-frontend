@@ -17,7 +17,12 @@ import type { RegisterResponse } from "@/types/auth";
 export function RegisterForm({
   onRegistered,
 }: {
-  onRegistered: (userId: string, email: string, otpExpiresAt: string) => void;
+  onRegistered: (
+    userId: string,
+    email: string,
+    otpExpiresAt: string,
+    otpResendAvailableAt: string
+  ) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +41,12 @@ export function RegisterForm({
     try {
       const res = await api.post<RegisterResponse>("/v1/auth/register", values);
       toast.success("Đăng ký thành công! Vui lòng nhập mã OTP.");
-      onRegistered(res.data.userId, values.email, res.data.otpExpiresAt);
+      onRegistered(
+        res.data.userId,
+        values.email,
+        res.data.otpExpiresAt,
+        res.data.otpResendAvailableAt
+      );
     } catch (err) {
       toast.error(getApiErrorMessage(err));
     } finally {
