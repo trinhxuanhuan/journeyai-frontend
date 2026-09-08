@@ -1,10 +1,14 @@
-# Việt Khám Phá — Frontend
+# JourneyAI — Việt Khám Phá Frontend
 
-Giao diện khách hàng cho nền tảng đặt tour nội địa và lập lịch trình tự túc bằng AI. Sản phẩm tập trung vào trải nghiệm du lịch Việt Nam có chiều sâu, minh bạch về lịch khởi hành, giá, thành phần gói tour và dự toán hành trình.
+A modern, responsive Next.js frontend for Vietnam tour booking and AI-assisted itinerary planning.
+
+Giao diện khách hàng của Việt Khám Phá tập trung vào trải nghiệm du lịch Việt Nam có chiều sâu, minh bạch về lịch khởi hành, giá, thành phần gói tour và dự toán hành trình.
 
 [![CI](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml)
 
-> Đây là frontend của hệ thống Việt Khám Phá. Backend được phát triển ở repository [`journeyai`](https://github.com/trinhxuanhuan/journeyai).
+**Repositories:** [Backend](https://github.com/trinhxuanhuan/journeyai) · Frontend (repository này)
+
+**Status:** MVP release candidate với unit test, lint, production build và Docker image được kiểm tra bởi CI.
 
 ## Hình ảnh sản phẩm
 
@@ -18,6 +22,14 @@ Các ảnh dưới đây được chụp từ bản chạy thật với dữ li�
 | --- | --- |
 | ![Kết quả hành trình AI](docs/assets/portfolio/hanh-trinh-ai.png) | <img src="docs/assets/portfolio/trang-chu-mobile.png" alt="Trang chủ Việt Khám Phá trên mobile" width="320"> |
 
+## Frontend highlights
+
+- **Complete customer journey:** khám phá Tour, chọn Departure, checkout, thanh toán, theo dõi Booking, nhận thông báo và quản lý tài khoản.
+- **Resilient authentication:** route guards, kiểm tra JWT, tự động refresh khi gặp `401`, single-flight refresh và thu hồi phiên local khi refresh token không còn hợp lệ.
+- **Contract-oriented API layer:** các module TypeScript tách theo Tour, Booking, Notification, Account và AI itinerary; form được kiểm tra bằng React Hook Form và Zod.
+- **Production UX states:** loading, empty, error, payment result, branded `404` và global error boundary thay vì chỉ xử lý happy path.
+- **Responsive and accessible UI:** hỗ trợ bàn phím, semantic status, reduced motion và bố cục thích ứng từ mobile đến desktop.
+
 ## Phạm vi MVP
 
 - Khám phá, lọc và xem chi tiết Tour ghép hoặc Tour riêng.
@@ -30,29 +42,20 @@ Các ảnh dưới đây được chụp từ bản chạy thật với dữ li�
 
 Khách sạn, phòng, xe, bữa ăn, vé tham quan và bảo hiểm là thành phần của package Tour; dự án không xây một OTA hoặc inventory nhà cung cấp riêng.
 
-## Luồng nghiệp vụ chính
+## Kiến trúc frontend
 
 ```mermaid
 flowchart LR
-  Customer[Khách hàng] --> FE[Next.js frontend]
-  FE --> Gateway[API Gateway :8090]
-  Gateway --> Tour[Tour service]
-  Gateway --> Auth[Auth service]
-  Gateway --> User[User service]
-  Gateway --> Booking[Booking service]
-  Gateway --> Payment[Payment service]
-  Gateway --> Notification[Notification service]
-  Gateway --> AI[AI itinerary service]
-
-  Tour --> Departure[Departure và availability]
-  Departure --> Booking
-  Booking --> Payment
-  Booking -. sự kiện .-> Notification
-  Payment -. sự kiện .-> Notification
-  AI --> Shared[Link hành trình công khai]
+  Browser[Browser] --> App[Next.js App Router]
+  App --> Guards[Auth and guest guards]
+  App --> Features["Tour · Booking · Payment · Notification · AI"]
+  Guards --> Session[Auth context and session refresh]
+  Features --> Clients[Typed domain API clients]
+  Session --> Clients
+  Clients --> Gateway[Backend API Gateway]
 ```
 
-Frontend và backend là hai repository độc lập, giao tiếp qua contract `/v1/**` tại API Gateway. Contract nghiệp vụ chi tiết nằm trong `docs/MVP_API_CONTRACT.md` của backend.
+Frontend và backend là hai repository độc lập. Trình duyệt chỉ giao tiếp với contract `/v1/**` tại API Gateway; chi tiết nghiệp vụ và kiến trúc service nằm trong [MVP API contract](https://github.com/trinhxuanhuan/journeyai/blob/main/docs/MVP_API_CONTRACT.md) và [Backend README](https://github.com/trinhxuanhuan/journeyai#readme).
 
 ## Công nghệ
 
