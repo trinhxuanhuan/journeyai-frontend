@@ -2,47 +2,47 @@
 
 A modern, responsive Next.js frontend for Vietnam tour booking and AI-assisted itinerary planning.
 
-Giao diện khách hàng của Việt Khám Phá tập trung vào trải nghiệm du lịch Việt Nam có chiều sâu, minh bạch về lịch khởi hành, giá, thành phần gói tour và dự toán hành trình.
+Việt Khám Phá presents Vietnam as a meaningful journey while keeping departure dates, availability, pricing, package inclusions, and itinerary budgets transparent.
 
 [![CI](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/trinhxuanhuan/journeyai-frontend/actions/workflows/ci.yml)
 
-**Repositories:** [Backend](https://github.com/trinhxuanhuan/journeyai) · Frontend (repository này)
+**Repositories:** [Backend](https://github.com/trinhxuanhuan/journeyai) · Frontend (this repository)
 
-**Status:** MVP release candidate với unit test, lint, production build và Docker image được kiểm tra bởi CI.
+**Status:** MVP release candidate with unit tests, linting, production builds, and Docker image verification in CI.
 
-## Hình ảnh sản phẩm
+## Product screenshots
 
-Các ảnh dưới đây được chụp từ bản chạy thật với dữ liệu catalog và API local, không phải mockup tĩnh.
+These screenshots were captured from the running application using the verified tour catalog and local APIs; they are not static mockups.
 
-| Khám phá tour | Chi tiết package tour |
+| Tour discovery | Tour-package details |
 | --- | --- |
-| ![Trang chủ Việt Khám Phá](docs/assets/portfolio/trang-chu-desktop.png) | ![Chi tiết tour Huế](docs/assets/portfolio/chi-tiet-tour-hue.png) |
+| ![Việt Khám Phá home page](docs/assets/portfolio/trang-chu-desktop.png) | ![Huế tour details](docs/assets/portfolio/chi-tiet-tour-hue.png) |
 
-| Hành trình AI đã lưu | Trải nghiệm mobile |
+| Saved AI itinerary | Mobile experience |
 | --- | --- |
-| ![Kết quả hành trình AI](docs/assets/portfolio/hanh-trinh-ai.png) | <img src="docs/assets/portfolio/trang-chu-mobile.png" alt="Trang chủ Việt Khám Phá trên mobile" width="320"> |
+| ![AI itinerary result](docs/assets/portfolio/hanh-trinh-ai.png) | <img src="docs/assets/portfolio/trang-chu-mobile.png" alt="Việt Khám Phá home page on mobile" width="320"> |
 
 ## Frontend highlights
 
-- **Complete customer journey:** khám phá Tour, chọn Departure, checkout, thanh toán, theo dõi Booking, nhận thông báo và quản lý tài khoản.
-- **Resilient authentication:** route guards, kiểm tra JWT, tự động refresh khi gặp `401`, single-flight refresh và thu hồi phiên local khi refresh token không còn hợp lệ.
-- **Contract-oriented API layer:** các module TypeScript tách theo Tour, Booking, Notification, Account và AI itinerary; form được kiểm tra bằng React Hook Form và Zod.
-- **Production UX states:** loading, empty, error, payment result, branded `404` và global error boundary thay vì chỉ xử lý happy path.
-- **Responsive and accessible UI:** hỗ trợ bàn phím, semantic status, reduced motion và bố cục thích ứng từ mobile đến desktop.
+- **Complete customer journey:** tour discovery, departure selection, checkout, payment, booking tracking, notifications, and account management.
+- **Resilient authentication:** route guards, JWT validation, automatic refresh after `401` responses, single-flight refresh, and local-session invalidation when a refresh token is rejected.
+- **Contract-oriented API layer:** TypeScript modules are organized by Tour, Booking, Notification, Account, and AI itinerary; React Hook Form and Zod validate user input.
+- **Production UX states:** loading, empty, error, payment-result, branded `404`, and global error-boundary experiences cover more than the happy path.
+- **Responsive and accessible UI:** keyboard support, semantic status regions, reduced-motion behavior, and layouts that adapt from mobile to desktop.
 
-## Phạm vi MVP
+## MVP scope
 
-- Khám phá, lọc và xem chi tiết Tour ghép hoặc Tour riêng.
-- Xem Departure thật, số chỗ còn lại và giá áp dụng cho từng ngày khởi hành.
-- Đặt tour với danh sách người tham gia, phụ thu phòng đơn và tùy chọn hướng dẫn viên phù hợp loại Tour.
-- Thanh toán VNPay, theo dõi Booking và yêu cầu hủy theo policy snapshot.
-- Nhận thông báo trong ứng dụng, đánh dấu đã đọc và cấu hình email.
-- Quản lý danh tính, thông tin liên hệ, avatar và sở thích trong Account Center.
-- Tạo, lưu, tinh chỉnh và chia sẻ hành trình tự túc bằng AI kèm dự toán, cảnh báo và chỉ số chất lượng.
+- Discover, filter, and inspect scheduled group tours or private tours.
+- View real departures, remaining capacity, and date-specific pricing.
+- Book tours with participant details, single-room supplements, and guide options appropriate to the tour type.
+- Pay through VNPay, track bookings, and request cancellation under the snapshotted policy.
+- Receive in-app notifications, manage read state, and configure email preferences.
+- Manage identity, contact information, avatar, and travel preferences in the Account Center.
+- Create, store, refine, and share AI-assisted itineraries with budgets, warnings, and quality indicators.
 
-Khách sạn, phòng, xe, bữa ăn, vé tham quan và bảo hiểm là thành phần của package Tour; dự án không xây một OTA hoặc inventory nhà cung cấp riêng.
+Hotels, rooms, transportation, meals, attraction tickets, and insurance are tour-package components. The project does not implement an OTA or standalone supplier inventory.
 
-## Kiến trúc frontend
+## Frontend architecture
 
 ```mermaid
 flowchart LR
@@ -55,34 +55,34 @@ flowchart LR
   Clients --> Gateway[Backend API Gateway]
 ```
 
-Frontend và backend là hai repository độc lập. Trình duyệt chỉ giao tiếp với contract `/v1/**` tại API Gateway; chi tiết nghiệp vụ và kiến trúc service nằm trong [MVP API contract](https://github.com/trinhxuanhuan/journeyai/blob/main/docs/MVP_API_CONTRACT.md) và [Backend README](https://github.com/trinhxuanhuan/journeyai#readme).
+The frontend and backend are maintained in separate repositories. The browser communicates only with the `/v1/**` contract exposed by the API Gateway; business rules and service architecture are documented in the [MVP API contract](https://github.com/trinhxuanhuan/journeyai/blob/main/docs/MVP_API_CONTRACT.md) and [Backend README](https://github.com/trinhxuanhuan/journeyai#readme).
 
-## Công nghệ
+## Technology
 
-- Next.js 16 App Router, React 19 và TypeScript strict.
-- Tailwind CSS 4, shadcn/base-ui và Framer Motion.
-- React Hook Form + Zod cho form và validation.
-- Axios cho API client; Vitest cho unit test.
-- GitHub Actions chạy test, lint và production build trên mọi pull request vào `main`.
+- Next.js 16 App Router, React 19, and strict TypeScript
+- Tailwind CSS 4, shadcn/base-ui, and Framer Motion
+- React Hook Form and Zod for forms and validation
+- Axios for API communication and Vitest for unit tests
+- GitHub Actions running tests, linting, and production builds on every pull request to `main`
 
-## Các route quan trọng
+## Key routes
 
-| Route | Chức năng |
+| Route | Purpose |
 | --- | --- |
-| `/` | Tìm kiếm, lọc và khám phá tour |
-| `/tours/[tourId]` | Chi tiết package, lịch trình và Departure |
-| `/dat-tour/[tourId]` | Checkout Tour ghép/Tour riêng |
-| `/bookings` | Danh sách booking của khách hàng |
-| `/bookings/[bookingId]` | Chi tiết, thanh toán và hủy booking |
-| `/thong-bao` | Trung tâm thông báo và tùy chọn email |
-| `/tai-khoan` | Hồ sơ tài khoản, liên hệ, avatar và sở thích du lịch |
-| `/lap-lich-trinh` | Tạo hành trình tự túc bằng AI |
-| `/hanh-trinh` | Các hành trình AI đã lưu |
-| `/hanh-trinh/chia-se/[shareToken]` | Bản chia sẻ công khai, không lộ dữ liệu chủ sở hữu |
+| `/` | Search, filter, and discover tours |
+| `/tours/[tourId]` | Tour package, itinerary, and departure details |
+| `/dat-tour/[tourId]` | Group/private tour checkout |
+| `/bookings` | Customer booking history |
+| `/bookings/[bookingId]` | Booking details, payment, and cancellation |
+| `/thong-bao` | Notification center and email preferences |
+| `/tai-khoan` | Profile, contact details, avatar, and travel preferences |
+| `/lap-lich-trinh` | AI-assisted itinerary creation |
+| `/hanh-trinh` | Saved AI itineraries |
+| `/hanh-trinh/chia-se/[shareToken]` | Public sharing without exposing owner information |
 
-## Chạy local
+## Run locally
 
-Yêu cầu Node.js 22 và backend đang chạy tại `http://localhost:8090`.
+Requires Node.js 22 and the backend running at `http://localhost:8090`.
 
 ```powershell
 Copy-Item .env.example .env.local
@@ -90,18 +90,18 @@ npm ci
 npm run dev
 ```
 
-Mở `http://localhost:3000`. Hai biến môi trường public:
+Open `http://localhost:3000`. The application uses two public environment variables:
 
-| Biến | Ý nghĩa | Giá trị local |
+| Variable | Purpose | Local value |
 | --- | --- | --- |
-| `NEXT_PUBLIC_API_URL` | Địa chỉ API Gateway | `http://localhost:8090` |
-| `NEXT_PUBLIC_SITE_URL` | Origin chuẩn của frontend cho SEO | `http://localhost:3000` |
+| `NEXT_PUBLIC_API_URL` | API Gateway base URL | `http://localhost:8090` |
+| `NEXT_PUBLIC_SITE_URL` | Canonical frontend origin for SEO | `http://localhost:3000` |
 
-Không đưa secret, khóa VNPay hoặc thông tin hạ tầng riêng vào biến `NEXT_PUBLIC_*` vì chúng được đóng gói xuống trình duyệt.
+Never place secrets, VNPay keys, or private infrastructure details in `NEXT_PUBLIC_*` variables because their values are bundled into browser-side JavaScript.
 
-## Build và triển khai
+## Build and deployment
 
-Frontend hỗ trợ cả nền tảng Next.js managed và image Docker standalone. Hai biến `NEXT_PUBLIC_*` phải được cấp tại **thời điểm build**; đổi biến runtime không thay được URL đã đóng gói trong JavaScript phía trình duyệt.
+The frontend supports both managed Next.js platforms and a standalone Docker image. Both `NEXT_PUBLIC_*` variables must be supplied at **build time**; changing runtime variables does not replace URLs already bundled into browser-side JavaScript.
 
 ```powershell
 docker build `
@@ -112,11 +112,11 @@ docker build `
 docker run --rm -p 3000:3000 viet-kham-pha/frontend:rc
 ```
 
-Image chạy bằng user không đặc quyền, chỉ chứa output đã trace của Next.js và có healthcheck tại `/robots.txt`. Backend staging phải cấu hình `CORS_ALLOWED_ORIGIN` trùng chính xác `NEXT_PUBLIC_SITE_URL`.
+The image runs as a non-root user, contains only the traced Next.js output, and exposes a health check at `/robots.txt`. The staging backend must configure `CORS_ALLOWED_ORIGIN` to exactly match `NEXT_PUBLIC_SITE_URL`.
 
-Hướng dẫn triển khai miễn phí, không cần mua domain: [docs/VERCEL_STAGING.md](docs/VERCEL_STAGING.md).
+Free deployment without purchasing a domain: [docs/VERCEL_STAGING.md](docs/VERCEL_STAGING.md).
 
-Sau khi FE và BE đã triển khai, chạy public smoke không cần tài khoản hoặc secret:
+After deploying the frontend and backend, run the public smoke test without an account or secret:
 
 ```powershell
 ./scripts/smoke-staging.ps1 `
@@ -124,7 +124,7 @@ Sau khi FE và BE đã triển khai, chạy public smoke không cần tài kho�
   -ApiBaseUrl https://api-staging.vietkhampha.vn
 ```
 
-Script kiểm tra branding/login/SEO, Gateway health, dữ liệu Tour thật, trang chi tiết, CORS và việc chặn API bảo vệ. Các luồng có tài khoản, Booking, VNPay, Notification và AI tiếp tục theo checklist E2E của backend vì cần hộp thư cùng tài khoản sandbox được quản lý.
+The script verifies branding, login, SEO, Gateway health, real tour data, detail pages, CORS, and protected-API enforcement. Authenticated Booking, VNPay, Notification, and AI flows follow the backend end-to-end checklist because they require a managed mailbox and sandbox account.
 
 ## Quality gates
 
@@ -134,21 +134,21 @@ npm run lint
 npm run build
 ```
 
-Giao diện có trạng thái loading/empty/error, hỗ trợ bàn phím, reduced motion, responsive từ mobile đến desktop, branded 404/error boundary và metadata cơ bản cho việc triển khai.
+The interface includes loading, empty, and error states; keyboard support; reduced-motion behavior; responsive layouts; branded 404 and error boundaries; and baseline deployment metadata.
 
-## Kịch bản kiểm thử end-to-end
+## End-to-end scenarios
 
-1. Đăng ký, xác thực OTP, đăng nhập và cập nhật hồ sơ tài khoản.
-2. Lọc Tour ghép, chọn Departure còn chỗ, nhập người tham gia và tạo Booking.
-3. Khởi tạo VNPay sandbox, quay lại trang kết quả và kiểm tra trạng thái chuẩn từ backend.
-4. Mở trung tâm thông báo, đánh dấu đã đọc và thay đổi tùy chọn email.
-5. Tạo hành trình AI, khóa một ngày, tinh chỉnh phần còn lại và mở link chia sẻ ở chế độ không đăng nhập.
-6. Đặt Tour riêng và xác nhận luồng không reserve shared capacity.
+1. Register, verify the OTP, sign in, and update the account profile.
+2. Filter group tours, choose an available departure, enter participant details, and create a booking.
+3. Initiate a VNPay sandbox payment, return to the result page, and verify the authoritative backend status.
+4. Open the notification center, mark notifications as read, and change email preferences.
+5. Generate an AI itinerary, lock one day, refine the remaining days, and open its public link while signed out.
+6. Book a private tour and verify that it does not reserve shared departure capacity.
 
-## Cố tình để sau MVP
+## Deliberately deferred beyond MVP
 
-- Báo giá Tour riêng tùy biến sâu.
-- Booking khách sạn, chuyến bay, vé tham quan hoặc inventory nhà cung cấp độc lập.
-- Ứng dụng quản trị vận hành hoàn chỉnh.
-- Mua dịch vụ trực tiếp từ lịch trình AI.
-- Đa ngôn ngữ và native mobile app.
+- Deeply customized private-tour quotations
+- Standalone hotel, flight, attraction-ticket, or supplier inventory
+- A complete operations administration application
+- Direct service purchases from AI-generated itineraries
+- Multilingual support and native mobile applications
